@@ -9,7 +9,7 @@ class AstarSearch(SearchAlgorithm):
     def execute(self, initialState: State, initialFunc, heuristicFunc):
         initialFunc(initialState)
         heap: list[State] = []
-        heapq.heapify(heap, key=lambda obj: obj.costPlusHeuristic)
+        heapq.heapify(heap)
         heapq.heappush(heap, initialState)
         explored = set()
 
@@ -19,6 +19,7 @@ class AstarSearch(SearchAlgorithm):
             if currState.value == self.goalTest:
                 self.printPath(currState)
                 return True
+            explored.add(currState)
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
                 if neighbour.value not in explored:
@@ -26,16 +27,17 @@ class AstarSearch(SearchAlgorithm):
                     neighbour.heuristics = copy(currState.heuristics)
                     heuristicFunc(neighbour, currState.indexOf0)
                     heapq.heappush(heap, neighbour)
-                    explored.add(neighbour.value)
+                    #explored.add(neighbour.value)
                     neighbour.parent = currState
                     #self.parentOf[neighbour] = currState
+        return False
 
     def ManhattanDistance(self, state: State, i):
         tile = int(state.value[i])
         #state.Manhattans = [0, 1, 1, 0, 0, 1, 0, 0, 0]
         state.heuristics[tile] = abs(tile // 3 + tile % 3 - i // 3 - i % 3)
         state.heuristic = sum(state.heuristics)
-        print(state.heuristics)
+        # print(state.heuristics)
 
     def initialManhattan(self, initialstate: State):
         for i in range(initialstate.indexOf0):
@@ -45,4 +47,4 @@ class AstarSearch(SearchAlgorithm):
             tile = int(initialstate.value[i])
             initialstate.heuristics[tile] = abs(tile // 3 + tile % 3 - i // 3 - i % 3)
         initialstate.heuristic = sum(initialstate.heuristics)
-        print(initialstate.heuristics)
+        # print(initialstate.heuristics)
