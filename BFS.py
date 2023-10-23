@@ -1,25 +1,28 @@
 from queue import Queue
 from SearchAlgorithm import SearchAlgorithm
+from State import State
+
 
 class BreadthFirstSearch(SearchAlgorithm):
 
-    def execute(self, initialState: str):
-        self.parentOf.clear()
-        self.parentOf[initialState] = None
+    def execute(self, initialState: State):
+        #self.parentOf.clear()
+        #self.parentOf[initialState] = None
         queue = Queue()
         queue.put(initialState)
         queueUnionExplored = set()
-        queueUnionExplored.add(initialState)
+        queueUnionExplored.add(initialState.value)
 
         while not queue.empty():
-            currState = queue.get()
-            if currState == self.goalTest:
+            currState: State = queue.get()
+            if currState.value == self.goalTest:
                 self.printPath(currState)
                 return True
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
-                if neighbour not in queueUnionExplored:
+                if neighbour.value not in queueUnionExplored:
                     queue.put(neighbour)
-                    queueUnionExplored.add(neighbour)
-                    self.parentOf[neighbour] = currState
+                    queueUnionExplored.add(neighbour.value)
+                    neighbour.parent = currState
+                    #self.parentOf[neighbour] = currState
         return False
