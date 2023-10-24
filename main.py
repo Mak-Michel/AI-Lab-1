@@ -1,9 +1,9 @@
 import time
-
 from BFS import BreadthFirstSearch
 from DFS import DepthFirstSearch
 from State import State
 from Astar import AstarSearch
+from StateHeuristics import *
 
 
 def processInput():
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     initialState = State(value, indexOf0)
     astar = AstarSearch()
     start = time.time()
-    print(astar.execute(initialState, astar.initialEuclidean, astar.EucildeanDistance))
+    print(astar.execute(initialState, initialEuclidean, EucildeanDistance))
     #print(astar.execute(initialState, astar.initialManhattan, astar.ManhattanDistance))
     end = time.time()
     print(end - start)
