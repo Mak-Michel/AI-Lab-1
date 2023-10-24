@@ -2,12 +2,17 @@ from copy import copy
 from SearchAlgorithm import SearchAlgorithm
 import heapq
 from State import State
+import StateHeuristics
 
 
 class AstarSearch(SearchAlgorithm):
 
-    def execute(self, initialState: State, heuristicFunc):
-        heuristicFunc(initialState)
+    def __init__(self, heuristicFunc):
+        self.__heuristicFunc = heuristicFunc
+
+
+    def execute(self, initialState: State):
+        self.__heuristicFunc(initialState)
         
         frontier = []
         self.nodesExpanded = set() 
@@ -31,13 +36,13 @@ class AstarSearch(SearchAlgorithm):
             
             for neighbour in self.findNeighbours(currState):
                 if neighbour.value not in frontierUexplored:
-                    heuristicFunc(neighbour)
+                    self.__heuristicFunc(neighbour)
                     heapq.heappush(frontier, neighbour)
                     frontierUexplored.add(neighbour.value)
                     # frontierTable[neighbour.value] = neighbour
                 elif neighbour.value not in self.nodesExpanded:
                     # existingNeighbour = frontierTable[neighbour.value]
-                    heuristicFunc(neighbour)
+                    self.__heuristicFunc(neighbour)
                     heapq.heappush(frontier, neighbour)
                     frontierUexplored.add(neighbour.value)
                     #self.parentOf[neighbour] = currState
