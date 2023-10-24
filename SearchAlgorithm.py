@@ -6,25 +6,21 @@ class SearchAlgorithm:
 
     def __init__(self):
         self.goalTest = "012345678"
-        self.nodesExpanded = set()
         self.maxDepth = 0
-        self.goal: State = None
-    
+        self.nodesExpanded = set()  # will store all explored nodes
+        self.goal: State = None     # will store the final State object of the goal test
+
     def swapAndAppend(self, state: State, index1, index2, neighbours):
         temp = list(state.value)
-        temp[index1], temp[index2] = temp[index2], temp[index1]
-        newState = State(''.join(temp), index2)
-        #temp[9] = str(index2)
+        temp[index1], temp[index2] = temp[index2], temp[index1]     # swap the tile with the empty tile
+        newState = State(''.join(temp), index2, state.cost + 1, state)  # create new state
         neighbours.append(newState)
-        newState.parent = state
-        newState.cost = state.cost + 1
 
     def findNeighbours(self, currState: State):
-        neighbours: list[State] = []
-        #indexOf0 = int(currState[9])
-        indexOf0 = currState.indexOf0
-        if indexOf0 % 3 != 0: self.swapAndAppend(currState, indexOf0, indexOf0 - 1, neighbours)
-        if indexOf0 % 3 != 2: self.swapAndAppend(currState, indexOf0, indexOf0 + 1, neighbours)
-        if indexOf0 < 6: self.swapAndAppend(currState, indexOf0, indexOf0 + 3, neighbours)
-        if indexOf0 > 2: self.swapAndAppend(currState, indexOf0, indexOf0 - 3, neighbours)
+        neighbours: list[State] = []    # list of the neighbours of current State
+        indexOf0 = currState.indexOf0   # index of the empty tile
+        if indexOf0 % 3 != 0: self.swapAndAppend(currState, indexOf0, indexOf0 - 1, neighbours) # move left
+        if indexOf0 % 3 != 2: self.swapAndAppend(currState, indexOf0, indexOf0 + 1, neighbours) # move right
+        if indexOf0 > 2: self.swapAndAppend(currState, indexOf0, indexOf0 - 3, neighbours)  # move up
+        if indexOf0 < 6: self.swapAndAppend(currState, indexOf0, indexOf0 + 3, neighbours)  # move down
         return neighbours

@@ -31,7 +31,7 @@ class AnswerManager:
             # Max depth the search reached until it reached the goal.
             self.__maxDepth : int = algorithm.maxDepth
             # Keep path length (goal depth).    
-            self.__pathLength = len(self.__forwardStack)-1
+            self.__pathLength = len(self.__forwardStack)
     
     def hasAnswer(self) -> bool:
         """
@@ -136,5 +136,5 @@ class AnswerManager:
         Returns the max depth that was reached by the algorithm until a solution was reached, \n
         and -1 if no solution was reached.
         """
-        return self.__maxDepth
+        return self.__maxDepth 
     

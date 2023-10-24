@@ -59,9 +59,9 @@ class CLI:
             case 2:
                 self.__algorithm = BreadthFirstSearch()
             case 3:
-                self.__algorithm = AstarSearch(StateHeuristics.StateManhattenHeuristic)
+                self.__algorithm = AstarSearch(StateHeuristics.initialManhattan , StateHeuristics.ManhattanDistance)
             case 4:
-                self.__algorithm = AstarSearch(StateHeuristics.StateEuclideanHeuristic)
+                self.__algorithm = AstarSearch(StateHeuristics.initialEuclidean, StateHeuristics.EucildeanDistance)
         
         start = time.time()
         found = self.__algorithm.execute(initialState)
