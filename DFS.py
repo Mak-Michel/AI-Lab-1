@@ -17,7 +17,6 @@ class DepthFirstSearch(SearchAlgorithm):
             self.maxDepth = max(self.maxDepth, currState.cost)  # Update the maximum depth reached in the search tree
             if currState.value == self.goalTest:    # if success
                 self.goal = currState    # Set the goal state to the current state
-                self.printPath(currState)
                 return True
             neighbours = self.findNeighbours(currState) # find neighboring states of the current state.
             for neighbour in neighbours:    # iterate over all the neighbour states

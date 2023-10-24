@@ -1,9 +1,11 @@
-import time
 from BFS import BreadthFirstSearch
 from DFS import DepthFirstSearch
 from State import State
 from Astar import AstarSearch
-from StateHeuristics import *
+from answerManager import AnswerManager
+from BFS import BreadthFirstSearch
+from DFS import DepthFirstSearch
+import StateHeuristics
 
 
 def processInput():
@@ -15,15 +17,10 @@ def processInput():
     return value, indexOf0
 
 if __name__ == '__main__':
-
-    value, indexOf0 = processInput()
-    initialState = State(value, indexOf0)
+    # value, indexOf0 = processInput()
+    initialState = State('102754863', 1)
     astar = AstarSearch()
-    start = time.time()
-    print(astar.execute(initialState, initialEuclidean, EucildeanDistance))
-    #print(astar.execute(initialState, astar.initialManhattan, astar.ManhattanDistance))
-    end = time.time()
-    print(end - start)
+    goal = astar.execute(initialState, StateHeuristics.StateManhattenHeuristic)
     # dfs = DepthFirstSearch()
     # print(dfs.execute(initialState))
     # bfs = BreadthFirstSearch()
@@ -31,6 +28,10 @@ if __name__ == '__main__':
     # d = AstarSearch()
     # d.initialManhattan(State("125340678", 5))
     # d.ManhattanDistance(State("120345678", 2), 5)
-    # d = AstarSearch()
-    # d.initialEuclidean(State("152340678", 5))
-    # d.EucildeanDistance(State("152304678", 4), 5)
+    print(goal.cost)
+    # am = AnswerManager(goal, 0, 0)
+
+    # while True:
+    #     am.printState()
+    #     if am.nextState() == None:
+    #         break

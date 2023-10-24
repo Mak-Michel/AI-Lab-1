@@ -24,23 +24,3 @@ class SearchAlgorithm:
         if indexOf0 > 2: self.swapAndAppend(currState, indexOf0, indexOf0 - 3, neighbours)  # move up
         if indexOf0 < 6: self.swapAndAppend(currState, indexOf0, indexOf0 + 3, neighbours)  # move down
         return neighbours
-
-    def printState(self, tuple):
-        strList = list(tuple[0])    # tuple[0] stores the configuration of the state
-        strList[tuple[1]] = " "     # tuple[1] stores index of empty blank
-        print(" ―――――――")
-        for i in range(0, 9, 3):
-            print(f"│ {strList[i]} │ {strList[i+1]} │ {strList[i+2]} │")
-            print(" ―――――――")
-        print()
-
-    def printPath(self, state: State):  # print path from initial state to goal state
-        stackPath = deque()
-        stackPath.append((state.value, state.indexOf0))
-        currState = state.parent
-        while currState is not None:    # back track to print the path by stack
-            stackPath.append((currState.value, currState.indexOf0))
-            currState = currState.parent
-
-        while stackPath:
-            self.printState(stackPath.pop())
