@@ -76,8 +76,8 @@ class AnswerManager:
         """
         if (self.__viewedState is None): return None
         stateList : list[int] = []
-        for str in list(self.__viewedState.value):
-            stateList.append(int(str))
+        for element in list(self.__viewedState.value):
+            stateList.append(int(element))
         return stateList
     
     def printState(self, state : State = None):
