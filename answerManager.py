@@ -1,33 +1,48 @@
 from State import State
 from collections import deque
+from SearchAlgorithm import SearchAlgorithm
 
 class AnswerManager:
 
-    def __init__(self, goalState: State, expandedNodes: int = -1, runtime: float = -1):
-        currState = goalState
+    def __init__(self, algorithm: SearchAlgorithm, runtime: float = -1):
+        currState = algorithm.goal
         # If we want to view next state, we pop from the forward stack.
         # If we want to view previous state, we pop from the backward stack.
         # Whenever we pop a state from one stack we put it into the other.
         self.__forwardStack = deque()
         self.__backwardStack = deque()
+        # Default instance variable values
+        self.__viewedState = None
+        self.__expandedNodes = -1
+        self.__runtime = -1
+        self.__maxDepth = -1
+        self.__pathLength = -1
         # Keep stacking from goal to starting state in the forward stack.
-        if (goalState is not None):
+        if (algorithm.goal is not None):
             while(currState.parent is not None):
                 self.__forwardStack.append(currState)
                 currState = currState.parent
-        # Keep path length (goal depth).
-        self.__pathLength = len(self.__forwardStack)-1
-        # Keep current state and initialize it to starting state.
-        self.__viewedState : State = self.__forwardStack.pop() if goalState is not None else None
-        # Number of expanded nodes.
-        self.__expandedNodes : int = expandedNodes if goalState is not None else -1
-        # Time it took the search to reach the goal.
-        self.__runtime : float = runtime if goalState is not None else -1
+            # Keep current state and initialize it to starting state.
+            self.__viewedState : State = self.__forwardStack.pop()
+            # Number of expanded nodes.
+            self.__expandedNodes : int = len(algorithm.nodesExpanded)
+            # Time it took the search to reach the goal.
+            self.__runtime : float = runtime
+            # Max depth the search reached until it reached the goal.
+            self.__maxDepth : int = algorithm.maxDepth
+            # Keep path length (goal depth).    
+            self.__pathLength = len(self.__forwardStack)-1
+    
+    def hasAnswer(self) -> bool:
+        """
+        Returns whether a solution was reached or not.
+        """
+        return self.__viewedState is not None
 
     def nextState(self) -> State:
         """
         Moves the current state inside the object to the next state.\n
-        Returns the new current state which was advanced to.
+        Returns the new current state which was advanced to as a list.
         """
         # Check if there are any more next states, if not, we're at the goal state.
         if (len(self.__forwardStack) == 0): return None
@@ -39,7 +54,7 @@ class AnswerManager:
     def prevState(self) -> State:
         """
         Moves the current state inside the object to the previous state.\n
-        Returns the new current state which was reverted to.
+        Returns the new current state which was reverted to as a list.
         """
         # Check if there are any previous states, if not, we're at the starting state.
         if (len(self.__backwardStack) == 0): return None
@@ -54,6 +69,33 @@ class AnswerManager:
         Returns: Starting state (after initialization), current state (after using next or previous state), null (if no answer was found).
         """
         return self.__viewedState
+    
+    def currStateList(self) -> list[int]:
+        """
+        Returns the current state as a list of integers
+        """
+        if (self.__viewedState is None): return None
+        stateList : list[int] = []
+        for str in list(self.__viewedState.value):
+            stateList.append(int(str))
+        return stateList
+    
+    def printState(self, state : State = None):
+        """
+        Prints the state passed to it, \n
+        and prints the current state if no argument is passed, \n
+        and prints an error message if no solution was found.
+        """
+        printedState = state if state != None else self.__viewedState
+        if (printedState is None):
+            print("No solution was found!")
+        strList = list(printedState.value)
+        strList[strList.index("0")] = " "
+        print(" ―――――――")
+        for i in range(0, 9, 3):
+            print(f"│ {strList[i]} │ {strList[i+1]} │ {strList[i+2]} │")
+            print(" ―――――――")
+        print()
     
     def pathCost(self) -> int:
         """
@@ -76,25 +118,10 @@ class AnswerManager:
         """
         return self.__runtime
     
-    def hasAnswer(self) -> bool:
+    def getMaxDepth(self) -> int:
         """
-        Returns whether a solution was reached or not.
+        Returns the max depth that was reached by the algorithm until a solution was reached, \n
+        and -1 if no solution was reached.
         """
-        return self.__viewedState is not None
+        return self.__maxDepth
     
-    def printState(self, state : State = None):
-        """
-        Prints the state passed to it, \n
-        and prints the current state if no argument is passed, \n
-        and prints an error message if no solution was found.
-        """
-        printedState = state if state != None else self.__viewedState
-        if (printedState is None):
-            print("No solution was found!")
-        strList = list(printedState.value)
-        strList[strList.index("0")] = " "
-        print(" ―――――――")
-        for i in range(0, 9, 3):
-            print(f"│ {strList[i]} │ {strList[i+1]} │ {strList[i+2]} │")
-            print(" ―――――――")
-        print()
