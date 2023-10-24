@@ -23,6 +23,9 @@ class AstarSearch(SearchAlgorithm):
             if currState.value == self.goalTest:
                 self.printPath(currState)
                 self.goal = currState
+                print(len(explored))
+                print(currState.cost)
+
                 return True
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
@@ -65,6 +68,7 @@ class AstarSearch(SearchAlgorithm):
         initialState.heuristic = sum(initialState.heuristics)
 
     def EucildeanDistance(self, state: State, i):
+        state.heuristics = copy(state.parent.heuristics)
         tile = int(state.value[i])
         tilePosx, tilPosy = self.pos(tile)
         iPosx, iPosy = self.pos(i)
