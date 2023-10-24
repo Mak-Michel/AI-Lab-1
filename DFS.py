@@ -6,8 +6,6 @@ from State import State
 class DepthFirstSearch(SearchAlgorithm):
 
     def execute(self, initialState: State):
-        # self.parentOf.clear()
-        # self.parentOf[initialState] = None
         stack = deque()
         stack.append(initialState)
         stackUnionExplored = set()
@@ -15,8 +13,12 @@ class DepthFirstSearch(SearchAlgorithm):
 
         while stack:
             currState: State = stack.pop()
+            self.nodesExpanded.add(currState.value)
+            self.maxDepth = max(self.maxDepth, currState.cost)
             if currState.value == self.goalTest:
+                self.goal = currState
                 self.printPath(currState)
+                print(currState.cost)
                 return True
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
@@ -24,5 +26,5 @@ class DepthFirstSearch(SearchAlgorithm):
                     stack.append(neighbour)
                     stackUnionExplored.add(neighbour.value)
                     neighbour.parent = currState
-                    # self.parentOf[neighbour] = currState
+
         return False
