@@ -2,6 +2,9 @@ from BFS import BreadthFirstSearch
 from DFS import DepthFirstSearch
 from State import State
 from Astar import AstarSearch
+from answerManager import AnswerManager
+from BFS import BreadthFirstSearch
+from DFS import DepthFirstSearch
 
 
 def processInput():
@@ -13,10 +16,10 @@ def processInput():
     return value, indexOf0
 
 if __name__ == '__main__':
-    value, indexOf0 = processInput()
-    initialState = State(value, indexOf0)
+    # value, indexOf0 = processInput()
+    initialState = State('102754863', 1)
     astar = AstarSearch()
-    print(astar.execute(initialState, astar.initialManhattan, astar.ManhattanDistance))
+    goal = astar.execute(initialState, astar.initialManhattan, astar.ManhattanDistance)
     # dfs = DepthFirstSearch()
     # print(dfs.execute(initialState))
     # bfs = BreadthFirstSearch()
@@ -24,3 +27,10 @@ if __name__ == '__main__':
     # d = AstarSearch()
     # d.initialManhattan(State("125340678", 5))
     # d.ManhattanDistance(State("120345678", 2), 5)
+    print(goal.cost)
+    am = AnswerManager(goal, 0, 0)
+
+    while True:
+        am.printState()
+        if am.nextState() == None:
+            break

@@ -8,21 +8,25 @@ class DepthFirstSearch(SearchAlgorithm):
     def execute(self, initialState: State):
         # self.parentOf.clear()
         # self.parentOf[initialState] = None
-        stack = deque()
-        stack.append(initialState)
-        stackUnionExplored = set()
-        stackUnionExplored.add(initialState.value)
+        frontier = deque()
+        frontier.append(initialState)
+        frontierUexplored = set()
+        frontierUexplored.add(initialState.value)
 
-        while stack:
-            currState: State = stack.pop()
+        while frontier:
+            currState: State = frontier.pop()
+            self.nodesExpanded.add(currState.value)
+            self.maxDepth = max(self.maxDepth, currState.cost)
+            
             if currState.value == self.goalTest:
-                self.printPath(currState)
+                self.goal = currState
                 return True
+            
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
-                if neighbour.value not in stackUnionExplored:
-                    stack.append(neighbour)
-                    stackUnionExplored.add(neighbour.value)
+                if neighbour.value not in frontierUexplored:
+                    frontier.append(neighbour)
+                    frontierUexplored.add(neighbour.value)
                     neighbour.parent = currState
                     # self.parentOf[neighbour] = currState
         return False

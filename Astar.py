@@ -8,43 +8,60 @@ class AstarSearch(SearchAlgorithm):
 
     def execute(self, initialState: State, initialFunc, heuristicFunc):
         initialFunc(initialState)
-        heap: list[State] = []
-        heapq.heapify(heap)
-        heapq.heappush(heap, initialState)
-        explored = set()
+        
+        frontier = []
+        self.nodesExpanded = set() 
+        frontierUexplored = set()
+        heapq.heappush(frontier, initialState)
+        frontierUexplored.add(initialState.value)
 
-        while heap:
-            currState = heapq.heappop(heap)
-            if currState.value in explored: continue
+        while frontier:
+            currState: State = heapq.heappop(frontier)
+
+            if currState.value in self.nodesExpanded:
+                continue
+
+            self.nodesExpanded.add(currState.value)
+            self.maxDepth = max(self.maxDepth, currState.cost)
+
             if currState.value == self.goalTest:
-                self.printPath(currState)
+                # self.printPath(currState)
+                self.goal = currState
                 return True
-            explored.add(currState)
-            neighbours = self.findNeighbours(currState)
-            for neighbour in neighbours:
-                if neighbour.value not in explored:
-                    neighbour.cost = currState.cost + 1
-                    neighbour.heuristics = copy(currState.heuristics)
-                    heuristicFunc(neighbour, currState.indexOf0)
-                    heapq.heappush(heap, neighbour)
-                    #explored.add(neighbour.value)
-                    neighbour.parent = currState
+            
+            for neighbour in self.findNeighbours(currState):
+                if neighbour.value not in frontierUexplored:
+                    self.initialManhattan(neighbour)
+                    heapq.heappush(frontier, neighbour)
+                    # frontierTable[neighbour.value] = neighbour
+                elif neighbour.value not in self.nodesExpanded:
+                    # existingNeighbour = frontierTable[neighbour.value]
+                    self.initialManhattan(neighbour)
+                    heapq.heappush(frontier, neighbour)
                     #self.parentOf[neighbour] = currState
+            
         return False
+
+
+    def pos(self, index):   return index // 3, index % 3
+
+
+    def manhattanDistance(self, currentPos, desiredPos):
+        desired_posy, desired_posx = self.pos(desiredPos)
+        current_posy, current_posx = self.pos(currentPos)
+        return abs(desired_posx - current_posx) + abs(desired_posy - current_posy)
+        
 
     def ManhattanDistance(self, state: State, i):
         tile = int(state.value[i])
         #state.Manhattans = [0, 1, 1, 0, 0, 1, 0, 0, 0]
         state.heuristics[tile] = abs(tile // 3 + tile % 3 - i // 3 - i % 3)
         state.heuristic = sum(state.heuristics)
-        # print(state.heuristics)
+        
 
     def initialManhattan(self, initialstate: State):
-        for i in range(initialstate.indexOf0):
-            tile = int(initialstate.value[i])
-            initialstate.heuristics[tile] = abs(tile // 3 + tile % 3 - i // 3 - i % 3)
-        for i in range(initialstate.indexOf0 + 1, 9):
-            tile = int(initialstate.value[i])
-            initialstate.heuristics[tile] = abs(tile // 3 + tile % 3 - i // 3 - i % 3)
-        initialstate.heuristic = sum(initialstate.heuristics)
-        # print(initialstate.heuristics)
+        heuristics = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for i in range(9):
+            if(initialstate.value[i] == '0'): continue
+            heuristics[int(initialstate.value[i])] = self.manhattanDistance(i, int(initialstate.value[i]))
+        initialstate.heuristic = sum(heuristics)
