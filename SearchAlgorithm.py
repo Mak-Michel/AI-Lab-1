@@ -6,14 +6,22 @@ class SearchAlgorithm:
 
     def __init__(self):
         self.goalTest = "012345678"
+        self.nodesExpanded = set()
+        self.maxDepth = 0
+        self.goal: State = None
         #self.parentOf = dict()
 
+    def goalTest(self, state: State):
+        return state.value == self.goalTest
+    
     def swapAndAppend(self, state: State, index1, index2, neighbours):
         temp = list(state.value)
         temp[index1], temp[index2] = temp[index2], temp[index1]
         newState = State(''.join(temp), index2)
         #temp[9] = str(index2)
         neighbours.append(newState)
+        newState.parent = state
+        newState.cost = state.cost + 1
 
     def findNeighbours(self, currState: State):
         neighbours: list[State] = []

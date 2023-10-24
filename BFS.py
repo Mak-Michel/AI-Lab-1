@@ -8,21 +8,25 @@ class BreadthFirstSearch(SearchAlgorithm):
     def execute(self, initialState: State):
         #self.parentOf.clear()
         #self.parentOf[initialState] = None
-        queue = Queue()
-        queue.put(initialState)
-        queueUnionExplored = set()
-        queueUnionExplored.add(initialState.value)
+        frontier = Queue()
+        frontier.put(initialState)
+        frontierUexplored = set()
+        frontierUexplored.add(initialState.value)
 
-        while not queue.empty():
-            currState: State = queue.get()
+        while not frontier.empty():
+            currState: State = frontier.get()
+            self.nodesExpanded.add(currState.value)
+            self.maxDepth = max(self.maxDepth, currState.cost)
+
             if currState.value == self.goalTest:
-                self.printPath(currState)
+                self.goal = currState
                 return True
+
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
-                if neighbour.value not in queueUnionExplored:
-                    queue.put(neighbour)
-                    queueUnionExplored.add(neighbour.value)
+                if neighbour.value not in frontierUexplored:
+                    frontier.put(neighbour)
+                    frontierUexplored.add(neighbour.value)
                     neighbour.parent = currState
                     #self.parentOf[neighbour] = currState
         return False
