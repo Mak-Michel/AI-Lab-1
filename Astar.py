@@ -22,8 +22,7 @@ class AstarSearch(SearchAlgorithm):
             explored.add(currState.value)
             if currState.value == self.goalTest:
                 self.printPath(currState)
-                print(len(explored))
-                print(currState.cost)
+                self.goal = currState
                 return True
             neighbours = self.findNeighbours(currState)
             for neighbour in neighbours:
