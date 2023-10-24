@@ -5,6 +5,7 @@ from Astar import AstarSearch
 from answerManager import AnswerManager
 from BFS import BreadthFirstSearch
 from DFS import DepthFirstSearch
+import StateHeuristics
 
 
 def processInput():
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     # value, indexOf0 = processInput()
     initialState = State('102754863', 1)
     astar = AstarSearch()
-    goal = astar.execute(initialState, astar.initialManhattan, astar.ManhattanDistance)
+    goal = astar.execute(initialState, StateHeuristics.StateManhattenHeuristic)
     # dfs = DepthFirstSearch()
     # print(dfs.execute(initialState))
     # bfs = BreadthFirstSearch()
@@ -28,9 +29,9 @@ if __name__ == '__main__':
     # d.initialManhattan(State("125340678", 5))
     # d.ManhattanDistance(State("120345678", 2), 5)
     print(goal.cost)
-    am = AnswerManager(goal, 0, 0)
+    # am = AnswerManager(goal, 0, 0)
 
-    while True:
-        am.printState()
-        if am.nextState() == None:
-            break
+    # while True:
+    #     am.printState()
+    #     if am.nextState() == None:
+    #         break
