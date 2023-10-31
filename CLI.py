@@ -7,6 +7,9 @@ from SearchAlgorithm import SearchAlgorithm
 import StateHeuristics
 import time
 import re
+import sys
+from GUI import GUI
+from PyQt5.QtWidgets import QApplication
 
 
 class CLI:
@@ -73,8 +76,8 @@ class CLI:
                 action = self.__inputExchange(
                     "1. Print the whole solution with steps\n"
                     "2. Get solution details\n"
-                    "3. Restart program\n"
-                    "4. Exit program\n\n"
+                    "3. Display solution in a GUI\n"
+                    "4. Rerun CLI\n\n"
                     "Choose a number: ", 
                     self.__4choiceValidator)
                 match int(action):
@@ -86,9 +89,15 @@ class CLI:
                               f"Maximum depth the search reached: {self.__manager.getMaxDepth()}\n"
                               f"Cost of the path to the goal: {self.__manager.pathCost()}\n\n")
                     case 3:
-                        return
+                        app = QApplication(sys.argv)
+                        window = GUI(self.__manager)
+                        window.setGeometry(400 , 400 , 1000 , 800)
+                        window.move(700 , 200)
+                        window.show()
+                        app.exec_()
+                        self.__manager.rollBack()
                     case 4:
-                        exit()
+                        return
         else:
             print("No solution was found!")
             
