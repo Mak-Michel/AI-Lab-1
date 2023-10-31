@@ -62,6 +62,12 @@ class AnswerManager:
         self.__forwardStack.append(self.__viewedState)
         self.__viewedState = self.__backwardStack.pop()
         return self.__viewedState
+
+    def rollBack(self) -> None:
+        """
+        Move solution to starting state.
+        """
+        while self.__backwardStack: self.prevState()
     
     def currState(self) -> State:
         """
@@ -70,14 +76,19 @@ class AnswerManager:
         """
         return self.__viewedState
     
-    def currStateList(self) -> list[int]:
+    def currStateList(self) -> list[list[str]]:
         """
-        Returns the current state as a list of integers
+        Returns the current state as a list of characters for GUI display
         """
         if self.__viewedState is None: return None
-        stateList : list[int] = []
-        for element in list(self.__viewedState.value):
-            stateList.append(int(element))
+        stateList : list[list[str]] = [[],[],[]]
+        counter = 0
+        for i in range(3):
+            for j in range(3):
+                stateList[i].append(
+                    self.__viewedState.value[counter] if self.__viewedState.value[counter] != '0' else ' '
+                )
+                counter += 1
         return stateList
     
     def printState(self, state : State = None):
@@ -101,14 +112,14 @@ class AnswerManager:
         if self.__viewedState is None:
             print("No solution was found.")
             return
-        while self.__backwardStack: self.prevState()
+        self.rollBack()
         print("\nSolution steps:\n")
         self.printState()
         while self.__forwardStack:
             self.nextState()
             self.printState()
         # Revert to beginning state
-        while self.__backwardStack: self.prevState()
+        self.rollBack()
 
     def pathCost(self) -> int:
         """
